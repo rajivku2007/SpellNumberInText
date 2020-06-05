@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpellNumberInText
 {
@@ -12,11 +9,11 @@ namespace SpellNumberInText
     public class NumberToWordConverter
     {
         /// <summary>
-        /// Get one degit number in word format
+        /// Get one digit number in word format
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        private string GetOneDegitNumberInWord(int number)
+        private string GetOneDigitNumberInWord(int number)
         {
             string name = "";
             switch (number)
@@ -53,20 +50,14 @@ namespace SpellNumberInText
             return name;
         }
 
-        public string ConvertToWords(double inputNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-
 
         /// <summary>
-        /// Get Two degit number in word format
+        /// Get Two digit number in word format
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
-        private string GetTwoDegitNumberInWord(int number)
-        {            
+        private string GetTwoDigitNumberInWord(int number)
+        {
             string name = null;
             switch (number)
             {
@@ -127,13 +118,127 @@ namespace SpellNumberInText
                 default:
                     if (number > 0)
                     {
-                        name = GetTwoDegitNumberInWord(Convert.ToInt32(number.ToString().Substring(0, 1) + "0")) + " " + GetOneDegitNumberInWord(Convert.ToInt32(number.ToString().Substring(1)));
+                        name = GetTwoDigitNumberInWord(Convert.ToInt32(number.ToString().Substring(0, 1) + "0")) + " " + GetOneDigitNumberInWord(Convert.ToInt32(number.ToString().Substring(1)));
                     }
                     break;
             }
             return name;
         }
 
+        /// <summary>
+        /// Get Number in Word format
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public string ConvertToWords(int number)
+        {
+            string result = string.Empty;
+            try
+            {
+                if (number == 0)
+                {
+                    result = "Zero Only";
+                }
+                else
+                {
+                    result = string.Format("{0} {1}", ConvertWholeNumber(number.ToString()).Trim(), "Only");
+
+                    if (number < 0)
+                        result = string.Format("Negative {0}", result);
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Convert Whole Number
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        private string ConvertWholeNumber(string number)
+        {
+            string word = "";
+
+            bool beginsZero = false;
+            bool isDone = false;//test if already translated    
+            double dblAmt = (Convert.ToDouble(number));
+
+            if (dblAmt > 0)
+            {
+                //test for zero or digit zero in a nuemric    
+                beginsZero = number.StartsWith("0");
+
+                int numDigits = number.Length;
+                int pos = 0;//store digit grouping    
+                string place = "";//digit grouping name:hundres,thousand,etc...    
+                switch (numDigits)
+                {
+                    case 1://Ones' range
+                        word = GetOneDigitNumberInWord(Convert.ToInt32(number));
+                        isDone = true;
+                        break;
+                    case 2://tens' range    
+                        word = GetTwoDigitNumberInWord(Convert.ToInt32(number));
+                        isDone = true;
+                        break;
+                    case 3://hundreds' range    
+                        pos = (numDigits % 3) + 1;
+                        place = " Hundred ";
+                        break;
+                    case 4://thousands' range    
+                    case 5:
+                    case 6:
+                        pos = (numDigits % 4) + 1;
+                        place = " Thousand ";
+                        break;
+                    case 7://millions' range    
+                    case 8:
+                    case 9:
+                        pos = (numDigits % 7) + 1;
+                        place = " Million ";
+                        break;
+                    case 10://Billions's range    
+                    case 11:
+                    case 12:
+                        pos = (numDigits % 10) + 1;
+                        place = " Billion ";
+                        break;
+                    //add extra case options for anything above Billion...    
+                    default:
+                        isDone = true;
+                        break;
+                }
+
+                if (!isDone)
+                {
+                    //if transalation is not done, continue...(Recursion comes in now!!)    
+                    if (number.Substring(0, pos) != "0" && number.Substring(pos) != "0")
+                    {
+                        try
+                        {
+                            word = ConvertWholeNumber(number.Substring(0, pos)) + place + ConvertWholeNumber(number.Substring(pos));
+                        }
+                        catch { }
+                    }
+                    else
+                    {
+                        word = ConvertWholeNumber(number.Substring(0, pos)) + ConvertWholeNumber(number.Substring(pos));
+                    }
+                }
+
+                //ignore digit grouping names    
+                if (word.Trim().Equals(place.Trim()))
+                    word = "";
+            }
+
+            return word.Trim();
+        }
 
     }
 }
