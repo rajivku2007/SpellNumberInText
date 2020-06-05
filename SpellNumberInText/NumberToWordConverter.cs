@@ -53,6 +53,13 @@ namespace SpellNumberInText
             return name;
         }
 
+        public string ConvertToWords(double inputNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
         /// <summary>
         /// Get Two degit number in word format
         /// </summary>
@@ -126,5 +133,7 @@ namespace SpellNumberInText
             }
             return name;
         }
+
+
     }
 }
