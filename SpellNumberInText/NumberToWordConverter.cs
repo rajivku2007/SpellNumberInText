@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace SpellNumberInText
 {
+    /// <summary>
+    /// Convert Number to Word 
+    /// </summary>
     public class NumberToWordConverter
     {
         /// <summary>
-        /// Get one degit number in word formate
+        /// Get one degit number in word format
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
@@ -45,6 +48,80 @@ namespace SpellNumberInText
                     break;
                 case 9:
                     name = "Nine";
+                    break;
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Get Two degit number in word format
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        private string GetTwoDegitNumberInWord(int number)
+        {            
+            string name = null;
+            switch (number)
+            {
+                case 10:
+                    name = "Ten";
+                    break;
+                case 11:
+                    name = "Eleven";
+                    break;
+                case 12:
+                    name = "Twelve";
+                    break;
+                case 13:
+                    name = "Thirteen";
+                    break;
+                case 14:
+                    name = "Fourteen";
+                    break;
+                case 15:
+                    name = "Fifteen";
+                    break;
+                case 16:
+                    name = "Sixteen";
+                    break;
+                case 17:
+                    name = "Seventeen";
+                    break;
+                case 18:
+                    name = "Eighteen";
+                    break;
+                case 19:
+                    name = "Nineteen";
+                    break;
+                case 20:
+                    name = "Twenty";
+                    break;
+                case 30:
+                    name = "Thirty";
+                    break;
+                case 40:
+                    name = "Fourty";
+                    break;
+                case 50:
+                    name = "Fifty";
+                    break;
+                case 60:
+                    name = "Sixty";
+                    break;
+                case 70:
+                    name = "Seventy";
+                    break;
+                case 80:
+                    name = "Eighty";
+                    break;
+                case 90:
+                    name = "Ninety";
+                    break;
+                default:
+                    if (number > 0)
+                    {
+                        name = GetTwoDegitNumberInWord(Convert.ToInt32(number.ToString().Substring(0, 1) + "0")) + " " + GetOneDegitNumberInWord(Convert.ToInt32(number.ToString().Substring(1)));
+                    }
                     break;
             }
             return name;
